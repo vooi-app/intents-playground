@@ -1,7 +1,7 @@
 import { useAccount, useReadContract } from "wagmi";
 import { mockPerpAddress } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
-import { formatEther, parseEther, zeroAddress } from "viem";
+import { formatEther, zeroAddress } from "viem";
 import { useOpenPosition } from "./useOpenPosition";
 import { useClosePosition } from "./useClosePosition";
 
