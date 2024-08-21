@@ -14,8 +14,6 @@ export function useClosePosition() {
     },
   });
 
-  console.log(error, callsStatus);
-
   const closePosition = () => {
     writeContractsAsync({
       contracts: [
