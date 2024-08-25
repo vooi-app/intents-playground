@@ -3,7 +3,7 @@ import { mockPerpAddress } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
 
 export function useClosePosition() {
-  const { writeContractsAsync, data: id, error } = useWriteContracts();
+  const { writeContractsAsync, data: id } = useWriteContracts();
 
   const { data: callsStatus } = useCallsStatus({
     id: id!,
