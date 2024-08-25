@@ -15,20 +15,20 @@ export function useOpenPosition() {
     },
   });
 
-  const openPosition = () => {
+  const openPosition = (amount: bigint) => {
     writeContractsAsync({
       contracts: [
         {
           address: testErc20Address,
           abi: erc20Abi,
           functionName: "approve",
-          args: [mockPerpAddress, parseEther("0.001")],
+          args: [mockPerpAddress, amount],
         },
         {
           abi: mockPerp,
           address: mockPerpAddress,
           functionName: "openPosition",
-          args: [parseEther("0.001")],
+          args: [amount],
         },
       ],
     });
