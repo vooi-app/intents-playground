@@ -10,14 +10,20 @@ import {
   vaultManagerAddress,
 } from "~/config";
 import { vaultManager } from "./abi/vaultManager";
+import { baseSepolia, optimismSepolia } from "viem/chains";
 
-interface Props {}
+const CHAIN_PAYMASTER_URL: Record<number, string> = {
+  [baseSepolia.id]:
+    "https://rpc.zerodev.app/api/v2/paymaster/01ca58a4-214b-4429-b932-94a808588397",
+  [optimismSepolia.id]:
+    "https://rpc.zerodev.app/api/v2/paymaster/587a5a94-89bd-435f-a637-8c0f4efef2d9",
+};
 
-export function SmartAccountBallance({}: Props): JSX.Element {
-  const { address } = useAccount();
+export function SmartAccountBallance(): JSX.Element {
+  const { address, chainId } = useAccount();
   const { data: balance } = useReadCab();
 
-  const { writeContracts, data: id } = useWriteContracts();
+  const { writeContracts, data: id, error } = useWriteContracts();
 
   const { data: callsStatus } = useCallsStatus({
     id: id!,
@@ -35,6 +41,15 @@ export function SmartAccountBallance({}: Props): JSX.Element {
         className="bg-yellow-400 disabled:opacity-60"
         disabled={callsStatus?.status === "PENDING"}
         onClick={() => {
+          if (chainId === undefined) {
+            return;
+          }
+
+          const paymasterUrl = CHAIN_PAYMASTER_URL[chainId];
+          if (!paymasterUrl) {
+            return;
+          }
+
           const amount = parseEther("0.3");
 
           writeContracts({
@@ -60,7 +75,7 @@ export function SmartAccountBallance({}: Props): JSX.Element {
             ],
             capabilities: {
               paymasterService: {
-                url: "https://rpc.zerodev.app/api/v2/paymaster/587a5a94-89bd-435f-a637-8c0f4efef2d9",
+                url: paymasterUrl,
               },
             },
           });
