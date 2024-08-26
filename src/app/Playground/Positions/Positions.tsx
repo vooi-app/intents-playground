@@ -5,6 +5,7 @@ import { formatEther, parseEther, zeroAddress } from "viem";
 import { useOpenPosition } from "./useOpenPosition";
 import { useClosePosition } from "./useClosePosition";
 import { useState } from "react";
+import { optimismSepolia } from "viem/chains";
 
 interface Props {}
 
@@ -14,8 +15,9 @@ export function Positions({}: Props): JSX.Element {
   const { data: position } = useReadContract({
     abi: mockPerp,
     address: mockPerpAddress,
-    functionName: "positions",
     args: [address || zeroAddress],
+    chainId: optimismSepolia.id,
+    functionName: "positions",
   });
 
   const { openPosition, pending: openPositionPending } = useOpenPosition();
