@@ -1,9 +1,9 @@
-import { erc20Abi, parseEther } from "viem";
+import { Address, erc20Abi, parseEther } from "viem";
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
-import { mockPerpAddress, testErc20Address } from "~/config";
+import { testErc20Address } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
 
-export function useOpenPosition() {
+export function useOpenPosition(perpAddress: Address) {
   const { writeContractsAsync, data: id } = useWriteContracts();
 
   const { data: callsStatus } = useCallsStatus({
@@ -22,11 +22,11 @@ export function useOpenPosition() {
           address: testErc20Address,
           abi: erc20Abi,
           functionName: "approve",
-          args: [mockPerpAddress, amount],
+          args: [perpAddress, amount],
         },
         {
           abi: mockPerp,
-          address: mockPerpAddress,
+          address: perpAddress,
           functionName: "openPosition",
           args: [amount],
         },

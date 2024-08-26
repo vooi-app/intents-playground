@@ -14,6 +14,3 @@ export const testErc20VaultAddress: Address =
 
 export const cabPaymasterAddress: Address =
   "0xB4Aa062cC685e7e2B6881ED57FB830Cd7D4bCf25";
-
-export const mockPerpAddress: Address =
-  "0x4a43d42C1b1d48402c5369666E109Dad85e7db63";

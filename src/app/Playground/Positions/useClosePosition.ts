@@ -1,8 +1,8 @@
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
-import { mockPerpAddress } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
+import { Address } from "viem";
 
-export function useClosePosition() {
+export function useClosePosition(perpAddress: Address) {
   const { writeContractsAsync, data: id } = useWriteContracts();
 
   const { data: callsStatus } = useCallsStatus({
@@ -19,7 +19,7 @@ export function useClosePosition() {
       contracts: [
         {
           abi: mockPerp,
-          address: mockPerpAddress,
+          address: perpAddress,
           functionName: "closePosition",
         },
       ],
