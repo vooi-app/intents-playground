@@ -1,9 +1,10 @@
 "use client";
 
-import { useAccount, useDisconnect } from "wagmi";
+import { useDisconnect } from "wagmi";
+import { useEoaAddress } from "../useEoaAddress";
 
 export function Account() {
-  const { address } = useAccount();
+  const { address } = useEoaAddress();
   const { disconnect } = useDisconnect();
 
   return (
