@@ -1,23 +1,16 @@
 "use client";
 
-import { useReadCab } from "@build-with-yi/wagmi";
+import { useReadCab } from "@magic-account/wagmi";
 import { erc20Abi, formatEther, parseAbi, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
 import {
+  CHAIN_PAYMASTER_URL,
   testErc20Address,
   testErc20VaultAddress,
   vaultManagerAddress,
 } from "~/config";
 import { vaultManager } from "./abi/vaultManager";
-import { baseSepolia, optimismSepolia } from "viem/chains";
-
-const CHAIN_PAYMASTER_URL: Record<number, string> = {
-  [baseSepolia.id]:
-    "https://rpc.zerodev.app/api/v2/paymaster/01ca58a4-214b-4429-b932-94a808588397",
-  [optimismSepolia.id]:
-    "https://rpc.zerodev.app/api/v2/paymaster/587a5a94-89bd-435f-a637-8c0f4efef2d9",
-};
 
 export function SmartAccountBallance(): JSX.Element {
   const { address, chainId } = useAccount();

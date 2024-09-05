@@ -1,4 +1,12 @@
 import { Address } from "viem";
+import { baseSepolia, optimismSepolia } from "viem/chains";
+
+export const CHAIN_PAYMASTER_URL: Record<number, string> = {
+  [baseSepolia.id]:
+    "https://rpc.zerodev.app/api/v2/paymaster/01ca58a4-214b-4429-b932-94a808588397",
+  [optimismSepolia.id]:
+    "https://rpc.zerodev.app/api/v2/paymaster/587a5a94-89bd-435f-a637-8c0f4efef2d9",
+};
 
 export const testErc20Address: Address =
   "0x3870419ba2bbf0127060bcb37f69a1b1c090992b";

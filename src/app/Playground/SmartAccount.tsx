@@ -1,6 +1,6 @@
 "use client";
 
-import { useEnableCab, useReadCab } from "@build-with-yi/wagmi";
+import { useEnableCab, useReadCab } from "@magic-account/wagmi";
 import { baseSepolia, optimismSepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import { usePaymasterRegistered } from "./usePaymasterRegistered/usePaymasterRegistered";
