@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { wrapEOAConnector } from "@magic-account/wagmi";
@@ -16,10 +16,10 @@ export function Providers({ children }: Props): JSX.Element {
 
   const [config] = useState(() =>
     createConfig({
-      chains: [optimismSepolia, baseSepolia],
+      chains: [optimismSepolia, sepolia],
       transports: {
         [optimismSepolia.id]: http(),
-        [baseSepolia.id]: http(),
+        [sepolia.id]: http(),
       },
       connectors: [wrapEOAConnector(injected())],
       multiInjectedProviderDiscovery: false,

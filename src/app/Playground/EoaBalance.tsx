@@ -1,7 +1,7 @@
 "use client";
 
 import { useTokenBalance } from "./useTokenBalance";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 import { formatEther } from "viem";
 import { useEoaAddress } from "./useEoaAddress";
 
@@ -16,7 +16,7 @@ export function EoaBalance({}: Props): JSX.Element {
   });
   const { data: base } = useTokenBalance({
     address: address,
-    chainId: baseSepolia.id,
+    chainId: sepolia.id,
   });
 
   return (

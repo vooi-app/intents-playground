@@ -4,7 +4,7 @@ import { invoiceManagerAbi } from "./abi/invoiceManagerAbi";
 import { isAddressEqual, zeroAddress } from "viem";
 import { useMemo } from "react";
 import { cabPaymasterAddress, invoiceManagerAddress } from "~/config";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 
 export function usePaymasterRegistered() {
   const { address } = useAccount();
@@ -33,7 +33,7 @@ export function usePaymasterRegistered() {
       abi: invoiceManagerAbi,
       functionName: "cabPaymasters",
       args: [address ?? "0x"],
-      chainId: baseSepolia.id,
+      chainId: sepolia.id,
       query: {
         refetchInterval,
       },
