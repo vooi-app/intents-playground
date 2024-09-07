@@ -1,7 +1,7 @@
 "use client";
 
 import { useEnableCab, useReadCab } from "@magic-account/wagmi";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import { usePaymasterRegistered } from "./usePaymasterRegistered/usePaymasterRegistered";
 
@@ -9,7 +9,7 @@ interface Props {}
 
 export function SmartAccount({}: Props): JSX.Element {
   const { address } = useAccount();
-  const { refetch } = useReadCab();
+  const { refetch } = useReadCab({structuralSharing: false});
 
   const { isRegistered } = usePaymasterRegistered();
 
@@ -38,7 +38,7 @@ export function SmartAccount({}: Props): JSX.Element {
       onClick={() => {
         enableCab({
           tokens: [
-            { name: "6TEST", networks: [optimismSepolia.id, baseSepolia.id] },
+            { name: "6TEST", networks: [optimismSepolia.id, sepolia.id] },
           ],
         });
       }}

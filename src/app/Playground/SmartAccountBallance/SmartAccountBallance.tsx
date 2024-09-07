@@ -14,7 +14,7 @@ import { vaultManager } from "./abi/vaultManager";
 
 export function SmartAccountBallance(): JSX.Element {
   const { address, chainId } = useAccount();
-  const { data: balance } = useReadCab();
+  const { data: balance } = useReadCab({structuralSharing: false});
 
   const { writeContracts, data: id, error } = useWriteContracts();
 
@@ -24,6 +24,7 @@ export function SmartAccountBallance(): JSX.Element {
       enabled: !!id,
       refetchInterval: (data) =>
         data.state.data?.status === "CONFIRMED" ? false : 2000,
+      structuralSharing: false
     },
   });
 

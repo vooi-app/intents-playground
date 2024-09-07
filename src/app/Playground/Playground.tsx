@@ -6,7 +6,7 @@ import { ConnectWallet } from "./ConnectWallet/ConnectWallet";
 import { SmartAccountBallance } from "./SmartAccountBallance/SmartAccountBallance";
 import { Positions } from "./Positions/Positions";
 import { SmartAccount } from "./SmartAccount";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 
 interface Props {}
 
@@ -35,7 +35,7 @@ export function Playground({}: Props): JSX.Element {
         />
         <Positions
           title="Base"
-          perpChainId={baseSepolia.id}
+          perpChainId={sepolia.id}
           perpAddress="0xc49da78c6ac3c3666cb465c4ccf8492a57616909"
         />
       </div>
