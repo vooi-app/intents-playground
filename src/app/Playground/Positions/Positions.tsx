@@ -1,6 +1,6 @@
 import { useAccount, useReadContract } from "wagmi";
 import { mockPerp } from "./abi/mockPerp";
-import { Address, formatEther, parseEther, zeroAddress } from "viem";
+import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
 import { useOpenPosition } from "./useOpenPosition";
 import { useClosePosition } from "./useClosePosition";
 import { useState } from "react";
@@ -43,13 +43,13 @@ export function Positions({
     permissionsContext
   );
 
-  const [openAmount, setOpenAmount] = useState("0.001");
+  const [openAmount, setOpenAmount] = useState("1");
 
   return (
     <div className="flex flex-col gap-1 items-start">
       {title}
       <br />
-      Position: {position !== undefined ? formatEther(position) : "-"}
+      Position: {position !== undefined ? formatUnits(position, 6) : "-"}
       <div className="flex gap-1">
         <button
           className="bg-green-400 disabled:opacity-60"
@@ -59,7 +59,7 @@ export function Positions({
               return;
             }
 
-            const amount = parseEther(openAmount);
+            const amount = parseUnits(openAmount, 6);
 
             openPosition(amount);
           }}

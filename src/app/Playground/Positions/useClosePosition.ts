@@ -12,7 +12,7 @@ export function useClosePosition(
   const { chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
 
-  const { writeContractsAsync, data: id } = useWriteContracts();
+  const { writeContractsAsync, data: id, isPending } = useWriteContracts();
 
   const { data: callsStatus } = useCallsStatus({
     id: id!,
@@ -53,6 +53,6 @@ export function useClosePosition(
 
   return {
     closePosition,
-    pending: callsStatus?.status === "PENDING",
+    pending: isPending || callsStatus?.status === "PENDING",
   };
 }

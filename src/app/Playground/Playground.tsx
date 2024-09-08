@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { EoaBalance } from "./EoaBalance";
 import { ConnectWallet } from "./ConnectWallet/ConnectWallet";
 import { SmartAccountBallance } from "./SmartAccountBallance/SmartAccountBallance";
 import { Positions } from "./Positions/Positions";
-import { SmartAccount } from "./SmartAccount";
-import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
+import { SmartAccount } from "./SmartAccount/SmartAccount";
+import { optimismSepolia, sepolia } from "viem/chains";
+import { EOABalance } from "./EOABalance";
 
 interface Props {}
 
@@ -24,9 +24,12 @@ export function Playground({}: Props): JSX.Element {
   return (
     <div>
       <ConnectWallet />
-      <EoaBalance />
+
+      <EOABalance />
+
       <SmartAccount />
       <SmartAccountBallance />
+
       <div className="flex gap-2">
         <Positions
           title="OP"
@@ -34,9 +37,9 @@ export function Playground({}: Props): JSX.Element {
           perpAddress="0x932a78FaF4245512caeeacdd5Bda3bE031C60C52"
         />
         <Positions
-          title="Base"
+          title="Sepolia"
           perpChainId={sepolia.id}
-          perpAddress="0xc49da78c6ac3c3666cb465c4ccf8492a57616909"
+          perpAddress="0x98eE3CA9Df88FC39d7CC700655eb2042344eA11f"
         />
       </div>
     </div>
