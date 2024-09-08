@@ -9,7 +9,7 @@ interface Props {}
 
 export function SmartAccount({}: Props): JSX.Element {
   const { address } = useAccount();
-  const { refetch } = useReadCab({structuralSharing: false});
+  const { refetch } = useReadCab();
 
   const { isRegistered } = usePaymasterRegistered();
 

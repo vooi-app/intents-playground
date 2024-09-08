@@ -20,7 +20,6 @@ export function useOpenPosition(
       enabled: !!id,
       refetchInterval: (data) =>
         data.state.data?.status === "CONFIRMED" ? false : 2000,
-      structuralSharing: false
     },
   });
 

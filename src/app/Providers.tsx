@@ -1,6 +1,10 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  replaceEqualDeep,
+} from "@tanstack/react-query";
 import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -12,7 +16,18 @@ interface Props {
 }
 
 export function Providers({ children }: Props): JSX.Element {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            structuralSharing(prevData, data) {
+              return replaceEqualDeep(prevData, data);
+            },
+          },
+        },
+      })
+  );
 
   const [config] = useState(() =>
     createConfig({
