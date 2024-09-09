@@ -1,12 +1,7 @@
 import { erc20Abi, parseAbi, parseUnits } from "viem";
 import { useAccount } from "wagmi";
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
-import {
-  CHAIN_PAYMASTER_URL,
-  testErc20Address,
-  testErc20VaultAddress,
-  vaultManagerAddress,
-} from "~/config";
+import { CONFIG, VAULT_MANAGER_ADDRESS } from "~/config";
 import { vaultManager } from "./abi/vaultManager";
 
 export function useMint() {
@@ -28,37 +23,42 @@ export function useMint() {
       return;
     }
 
-    const paymasterUrl = CHAIN_PAYMASTER_URL[chainId];
-    if (!paymasterUrl) {
+    const chainConfig = CONFIG.chains.find(({ chain }) => chain.id === chainId);
+    if (!chainConfig) {
       return;
     }
 
-    const amount = parseUnits("1000", 6);
+    const amount = parseUnits("1000", chainConfig.usdTokenDecimals);
 
     writeContracts({
       contracts: [
         {
-          address: testErc20Address,
+          address: chainConfig.usdTokenAddress,
           abi: parseAbi(["function mint(address,uint256)"]),
           functionName: "mint",
           args: [address, amount],
         },
         {
-          address: testErc20Address,
+          address: chainConfig.usdTokenAddress,
           abi: erc20Abi,
           functionName: "approve",
-          args: [vaultManagerAddress, amount],
+          args: [VAULT_MANAGER_ADDRESS, amount],
         },
         {
-          address: vaultManagerAddress,
+          address: VAULT_MANAGER_ADDRESS,
           abi: vaultManager,
           functionName: "deposit",
-          args: [testErc20Address, testErc20VaultAddress, amount, false],
+          args: [
+            chainConfig.usdTokenAddress,
+            chainConfig.vaultAddress,
+            amount,
+            false,
+          ],
         },
       ],
       capabilities: {
         paymasterService: {
-          url: paymasterUrl,
+          url: chainConfig.payMasterURL,
         },
       },
     });

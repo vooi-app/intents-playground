@@ -9,12 +9,11 @@ export function EOABalance(): JSX.Element {
     <div>
       <div>Ballance:</div>
 
-      {CONFIG.chains.map(({ chain, usdTokenAddress }) => (
+      {CONFIG.chains.map((chainConfig) => (
         <EOAChainBalance
           address={address}
-          chain={chain}
-          key={chain.id}
-          usdTokenAddress={usdTokenAddress}
+          chainConfig={chainConfig}
+          key={chainConfig.chain.id}
         />
       ))}
     </div>

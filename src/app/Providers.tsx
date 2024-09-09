@@ -5,11 +5,12 @@ import {
   QueryClientProvider,
   replaceEqualDeep,
 } from "@tanstack/react-query";
-import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { wrapEOAConnector } from "@magic-account/wagmi";
 import { useState } from "react";
+import { CONFIG } from "~/config";
+import { Chain, Transport } from "viem";
 
 interface Props {
   children?: React.ReactNode;
@@ -29,17 +30,20 @@ export function Providers({ children }: Props): JSX.Element {
       })
   );
 
-  const [config] = useState(() =>
-    createConfig({
-      chains: [optimismSepolia, sepolia],
-      transports: {
-        [optimismSepolia.id]: http(),
-        [sepolia.id]: http(),
-      },
+  const [config] = useState(() => {
+    const transports: Record<number, Transport> = {};
+
+    CONFIG.chains.forEach(({ chain }) => {
+      transports[chain.id] = http();
+    });
+
+    return createConfig({
+      chains: CONFIG.chains.map(({ chain }) => chain) as [Chain, ...Chain[]],
+      transports,
       connectors: [wrapEOAConnector(injected())],
       multiInjectedProviderDiscovery: false,
-    })
-  );
+    });
+  });
 
   return (
     <WagmiProvider config={config}>

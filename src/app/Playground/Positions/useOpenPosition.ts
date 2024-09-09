@@ -1,6 +1,6 @@
-import { Address, erc20Abi, parseEther } from "viem";
+import { Address, erc20Abi } from "viem";
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
-import { CHAIN_PAYMASTER_URL, testErc20Address } from "~/config";
+import { CONFIG } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
 import { useAccount, useSwitchChain } from "wagmi";
 
@@ -24,10 +24,15 @@ export function useOpenPosition(
   });
 
   const openPosition = async (amount: bigint) => {
+    const chainConfig = CONFIG.chains.find(({ chain }) => chain.id === chainId);
+    if (!chainConfig) {
+      return;
+    }
+
     const capabilities = permissionsContext
       ? {
           paymasterService: {
-            url: CHAIN_PAYMASTER_URL[perpChainId],
+            url: chainConfig.payMasterURL,
           },
           permissions: {
             sessionId: permissionsContext,
@@ -42,7 +47,7 @@ export function useOpenPosition(
     await writeContractsAsync({
       contracts: [
         {
-          address: testErc20Address,
+          address: chainConfig.usdTokenAddress,
           abi: erc20Abi,
           functionName: "approve",
           args: [perpAddress, amount],

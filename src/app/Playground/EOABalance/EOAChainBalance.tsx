@@ -1,18 +1,17 @@
-import { Address, Chain, erc20Abi, formatUnits, zeroAddress } from "viem";
+import { Address, erc20Abi, formatUnits, zeroAddress } from "viem";
 import { useReadContract } from "wagmi";
+import { ChainConfig } from "~/config";
 
 interface Props {
   address?: Address;
-  chain: Chain;
-  usdTokenAddress: Address;
+  chainConfig: ChainConfig;
 }
 
 export function EOAChainBalance({
   address,
-  chain,
-  usdTokenAddress,
+  chainConfig: { chain, usdTokenAddress, usdTokenDecimals },
 }: Props): JSX.Element {
-  const { data } = useReadContract({
+  const { data, error } = useReadContract({
     abi: erc20Abi,
     address: usdTokenAddress,
     args: [address ?? zeroAddress],
@@ -22,7 +21,8 @@ export function EOAChainBalance({
 
   return (
     <div>
-      {chain.name}: {data !== undefined ? formatUnits(data, 6) : "-"}
+      {chain.name}:{" "}
+      {data !== undefined ? formatUnits(data, usdTokenDecimals) : "-"}
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
 } from "viem";
 import { walletActionsErc7715 } from "viem/experimental";
 import { useAccount, useSwitchChain, useWalletClient } from "wagmi";
-import { testErc20Address } from "~/config";
+import { CONFIG } from "~/config";
 import { useMutation } from "@tanstack/react-query";
 import { mockPerp } from "./abi/mockPerp";
 
@@ -37,6 +37,13 @@ export function Session({
         await switchChainAsync({ chainId: perpChainId });
       }
 
+      const chainConfig = CONFIG.chains.find(
+        ({ chain }) => chain.id === chainId
+      );
+      if (!chainConfig) {
+        throw new Error();
+      }
+
       return client.extend(walletActionsErc7715()).grantPermissions({
         signer: {
           type: "wallet",
@@ -45,7 +52,7 @@ export function Session({
           {
             type: { custom: "erc20-token-approve" },
             data: {
-              tokenAddress: testErc20Address,
+              tokenAddress: chainConfig.usdTokenAddress,
               allowance: parseEther("1"),
               contractAllowList: [
                 {

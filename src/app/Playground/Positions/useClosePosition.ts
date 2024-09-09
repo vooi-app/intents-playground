@@ -1,7 +1,7 @@
 import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
 import { mockPerp } from "./abi/mockPerp";
 import { Address } from "viem";
-import { CHAIN_PAYMASTER_URL } from "~/config";
+import { CONFIG } from "~/config";
 import { useAccount, useSwitchChain } from "wagmi";
 
 export function useClosePosition(
@@ -24,10 +24,15 @@ export function useClosePosition(
   });
 
   const closePosition = async () => {
+    const chainConfig = CONFIG.chains.find(({ chain }) => chain.id === chainId);
+    if (!chainConfig) {
+      return;
+    }
+
     const capabilities = permissionsContext
       ? {
           paymasterService: {
-            url: CHAIN_PAYMASTER_URL[perpChainId],
+            url: chainConfig.payMasterURL,
           },
           permissions: {
             sessionId: permissionsContext,
