@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@magic-account/wagmi':
-        specifier: 0.0.24-alpha-11
-        version: 0.0.24-alpha-11(u43utcywctbzow7pld35m436da)
+        specifier: 0.0.24-alpha-12
+        version: 0.0.24-alpha-12(u43utcywctbzow7pld35m436da)
       '@tanstack/react-query':
         specifier: ^5.51.24
         version: 5.54.1(react@18.3.1)
@@ -975,8 +975,8 @@ packages:
   '@lit/reactive-element@1.6.3':
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
 
-  '@magic-account/wagmi@0.0.24-alpha-11':
-    resolution: {integrity: sha512-lVZvtBOteq6lam2PgS74KnqJqpuTVsolFKKGhsp9tytt4m5/6exuQ5UvwlTOFfAFbSasqlrDPEmpssnBxap6tQ==}
+  '@magic-account/wagmi@0.0.24-alpha-12':
+    resolution: {integrity: sha512-I+CzUF3ib+wnTM27lyb7uCKg42F8lUCbe+FK4t6Pif+E/od7g0a/64VlM2HNTqBInVHeOXzN70tJnZf5OR9bXg==}
     peerDependencies:
       viem: 2.15.1
       wagmi: ^2.11.3
@@ -1814,8 +1814,8 @@ packages:
       permissionless: '>=0.1.18 <=0.1.29'
       viem: ^2.16.3
 
-  '@zerodev/session-account@5.3.0-alpha-18':
-    resolution: {integrity: sha512-hWpc/wTzrPBq1OBsnsap+KS7c4HbfeW2laWI/a9Xp4MUh6TiZziHFSaVXfxky2U+/Udm9FecBM7uE2WDPQmYbQ==}
+  '@zerodev/session-account@5.3.0-alpha-19':
+    resolution: {integrity: sha512-5njvFFOtJwSjzgeWuol5WOzZMzZ5kn425qVUtksYbG0m/e20/vspieAmV9+Tn1Ni8bUZFMyXJC3TOGfpwq0y1A==}
     peerDependencies:
       '@zerodev/cab': 0.0.16-alpha-9
       '@zerodev/sdk': ^5.3.10
@@ -6282,7 +6282,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.1
 
-  '@magic-account/wagmi@0.0.24-alpha-11(u43utcywctbzow7pld35m436da)':
+  '@magic-account/wagmi@0.0.24-alpha-12(u43utcywctbzow7pld35m436da)':
     dependencies:
       '@noble/hashes': 1.5.0
       '@turnkey/sdk-browser': 1.3.0(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10)
@@ -6294,7 +6294,7 @@ snapshots:
       '@zerodev/ecdsa-validator': 5.3.2(@zerodev/sdk@5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@zerodev/multi-chain-validator': 5.3.10(@zerodev/sdk@5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(@zerodev/webauthn-key@5.3.2(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@zerodev/sdk': 5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))
-      '@zerodev/session-account': 5.3.0-alpha-18(iwfomegqwcvozdvmvc6kttyyjy)
+      '@zerodev/session-account': 5.3.0-alpha-19(iwfomegqwcvozdvmvc6kttyyjy)
       '@zerodev/webauthn-key': 5.3.2(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))
       eventemitter3: 5.0.1
       lodash: 4.17.21
@@ -7954,7 +7954,7 @@ snapshots:
       semver: 7.6.3
       viem: 2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)
 
-  '@zerodev/session-account@5.3.0-alpha-18(iwfomegqwcvozdvmvc6kttyyjy)':
+  '@zerodev/session-account@5.3.0-alpha-19(iwfomegqwcvozdvmvc6kttyyjy)':
     dependencies:
       '@zerodev/cab': 0.0.16-alpha-9(@zerodev/permissions@5.4.5(@zerodev/sdk@5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(@zerodev/webauthn-key@5.3.2(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(@zerodev/sdk@5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@zerodev/sdk': 5.3.12(permissionless@0.1.29(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)))(viem@2.16.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10))

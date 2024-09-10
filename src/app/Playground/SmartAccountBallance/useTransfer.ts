@@ -28,7 +28,7 @@ export function useTransfer() {
       return;
     }
 
-    const amount = parseUnits("10", chainConfig.usdTokenDecimals);
+    const amount = parseUnits("1", chainConfig.usdTokenDecimals);
 
     writeContracts({
       contracts: [

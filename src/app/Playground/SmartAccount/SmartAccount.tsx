@@ -15,7 +15,7 @@ export function SmartAccount(): JSX.Element {
   const { address } = useAccount();
   const { refetch } = useReadCab();
 
-  const { isRegistered } = usePaymasterRegistered();
+  const registered = usePaymasterRegistered();
 
   const { enableCab, isEnabledOnCurrentChain, isPending } = useEnableCab({
     onSuccess() {
@@ -52,7 +52,7 @@ export function SmartAccount(): JSX.Element {
     <div>
       Smart account: {address}
       <br />
-      Registered: {isRegistered ? "true" : "false"}
+      Registered: {registered ? "true" : "false"}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export function EOAChainBalance({
   address,
   chainConfig: { chain, usdTokenAddress, usdTokenDecimals },
 }: Props): JSX.Element {
-  const { data, error } = useReadContract({
+  const { data } = useReadContract({
     abi: erc20Abi,
     address: usdTokenAddress,
     args: [address ?? zeroAddress],

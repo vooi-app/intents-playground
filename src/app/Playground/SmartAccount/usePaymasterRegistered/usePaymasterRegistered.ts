@@ -1,65 +1,39 @@
 import { useCallback } from "react";
-import { useReadContract, useAccount } from "wagmi";
+import { useAccount, useReadContracts } from "wagmi";
 import { invoiceManagerAbi } from "./abi/invoiceManagerAbi";
-import { isAddressEqual, zeroAddress } from "viem";
-import { useMemo } from "react";
-import { cabPaymasterAddress, invoiceManagerAddress } from "~/config";
-import { baseSepolia, optimismSepolia, sepolia } from "viem/chains";
+import { Address, isAddressEqual, zeroAddress } from "viem";
+import {
+  CAB_PAYMASTER_ADDRESS,
+  CONFIG,
+  INVOICE_MANAGER_ADDRESS,
+} from "~/config";
 
 export function usePaymasterRegistered() {
   const { address } = useAccount();
 
-  const refetchInterval = useCallback((data: any) => {
-    const isRegistered =
-      data && isAddressEqual(data?.[0] ?? zeroAddress, cabPaymasterAddress);
-
-    return isRegistered ? false : 5000; // Stop polling if registered, otherwise poll every 5 seconds
-  }, []);
-
-  const { data: repayChainRegistered, isPending: isRepayPending } =
-    useReadContract({
-      address: invoiceManagerAddress,
+  const { data } = useReadContracts({
+    contracts: CONFIG.chains.map(({ chain }) => ({
+      address: INVOICE_MANAGER_ADDRESS,
       abi: invoiceManagerAbi,
       functionName: "cabPaymasters",
       args: [address ?? "0x"],
-      chainId: optimismSepolia.id,
-      query: {
-        refetchInterval,
-      },
-    });
-  const { data: sponsorChainRegistered, isPending: isSponsorPending } =
-    useReadContract({
-      address: invoiceManagerAddress,
-      abi: invoiceManagerAbi,
-      functionName: "cabPaymasters",
-      args: [address ?? "0x"],
-      chainId: sepolia.id,
-      query: {
-        refetchInterval,
-      },
-    });
+      chainId: chain.id,
+    })),
+    query: {
+      refetchInterval: useCallback(({ state: { data } }: any) => {
+        return isRegistered(data) ? false : 5000;
+      }, []),
+    },
+  });
 
-  const { isRepayRegistered, isSponsorRegistered, status } = useMemo(() => {
-    const isRepayRegistered =
-      repayChainRegistered &&
-      isAddressEqual(repayChainRegistered[0], cabPaymasterAddress);
-    const isSponsorRegistered =
-      sponsorChainRegistered &&
-      isAddressEqual(sponsorChainRegistered[0], cabPaymasterAddress);
-    const status = isSponsorRegistered ? 2 : isRepayRegistered ? 1 : 0;
+  return isRegistered(data as any);
+}
 
-    return {
-      isRepayRegistered: isRepayRegistered,
-      isSponsorRegistered: isSponsorRegistered,
-      status: status,
-    };
-  }, [repayChainRegistered, sponsorChainRegistered]);
-
-  return {
-    isRegistered: isRepayRegistered && isSponsorRegistered,
-    isRepayRegistered: isRepayRegistered,
-    status: status,
-    isSponsorRegistered: isSponsorRegistered,
-    isPending: isRepayPending || isSponsorPending,
-  };
+function isRegistered(data: { result: [Address] }[]) {
+  return !!data?.every(({ result }) =>
+    isAddressEqual(
+      (result as unknown as Address[] | undefined)?.[0] || zeroAddress,
+      CAB_PAYMASTER_ADDRESS
+    )
+  );
 }
