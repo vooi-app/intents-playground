@@ -3,10 +3,12 @@
 import { useReadCab } from "@magic-account/wagmi";
 import { formatUnits } from "viem";
 import { useMint } from "./useMint";
-import { useTransfer } from "./useTransfer";
+import { useTransfer } from "./useTransfer2";
 
 export function SmartAccountBallance(): JSX.Element {
   const { data: balance } = useReadCab();
+
+  console.log(balance);
 
   const { mint, pending: mintPending } = useMint();
   const { transfer, pending: transferPending } = useTransfer();
