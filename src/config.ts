@@ -3,10 +3,10 @@ import { base, bsc, optimismSepolia, sepolia } from "viem/chains";
 
 export interface ChainConfig {
   chain: Chain;
-  payMasterURL: string;
   usdTokenAddress: Address;
   usdTokenDecimals: number;
   vaultAddress: Address;
+  zeroDevProjectId: string;
 }
 
 export interface Config {
@@ -31,19 +31,17 @@ if (process.env.NEXT_PUBLIC_NETWORK === "mainnet") {
     chains: [
       {
         chain: base,
-        payMasterURL:
-          "https://rpc.zerodev.app/api/v2/paymaster/618c232a-8a56-40a7-97b8-e6d2f32047a1",
         usdTokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
         usdTokenDecimals: 18,
         vaultAddress: "0x35b459ece8281bbd2523ca9275749c6cf86c4652",
+        zeroDevProjectId: "618c232a-8a56-40a7-97b8-e6d2f32047a1",
       },
       {
         chain: bsc,
-        payMasterURL:
-          "https://rpc.zerodev.app/api/v2/paymaster/3ab460c9-57d0-476b-9a3d-1c9a092b68aa",
         usdTokenAddress: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
         usdTokenDecimals: 18,
         vaultAddress: "0xbe7fe3d3f293261ae3fcd128d57a77729496b3b7",
+        zeroDevProjectId: "3ab460c9-57d0-476b-9a3d-1c9a092b68aa",
       },
     ],
   };
@@ -54,18 +52,16 @@ if (process.env.NEXT_PUBLIC_NETWORK === "mainnet") {
       {
         usdTokenDecimals: 6,
         chain: sepolia,
-        payMasterURL:
-          "https://rpc.zerodev.app/api/v2/paymaster/cc176414-1ad3-4e38-ad8d-aad43ac0ffe6",
         usdTokenAddress: "0x3870419ba2bbf0127060bcb37f69a1b1c090992b",
         vaultAddress: "0xaf9bec58bb2c173fef7d9ade9bbc3e179f3e8993",
+        zeroDevProjectId: "cc176414-1ad3-4e38-ad8d-aad43ac0ffe6",
       },
       {
         usdTokenDecimals: 6,
         chain: optimismSepolia,
-        payMasterURL:
-          "https://rpc.zerodev.app/api/v2/paymaster/7e156305-bc27-4f9e-aefe-082d85a31194",
         usdTokenAddress: "0x3870419ba2bbf0127060bcb37f69a1b1c090992b",
         vaultAddress: "0xaf9bec58bb2c173fef7d9ade9bbc3e179f3e8993",
+        zeroDevProjectId: "7e156305-bc27-4f9e-aefe-082d85a31194",
       },
     ],
   };

@@ -4,7 +4,8 @@ import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
 import { useOpenPosition } from "./useOpenPosition";
 import { useClosePosition } from "./useClosePosition";
 import { useState } from "react";
-import { Session } from "./Session";
+import { useSmartAccount } from "~/app/useSmartAccount";
+// import { Session } from "./Session";
 
 interface Props {
   perpAddress: Address;
@@ -17,7 +18,7 @@ export function Positions({
   perpChainId,
   title,
 }: Props): JSX.Element {
-  const { address } = useAccount();
+  const { cabClient } = useSmartAccount();
 
   const [permissionsContext, setPermissionsContext] = useState("");
 
@@ -27,7 +28,7 @@ export function Positions({
     },
     abi: mockPerp,
     address: perpAddress,
-    args: [address || zeroAddress],
+    args: [cabClient?.account?.address || zeroAddress],
     chainId: perpChainId,
     functionName: "positions",
   });
@@ -84,14 +85,14 @@ export function Positions({
       >
         Close
       </button>
-      <Session
+      {/* <Session
         perpAddress={perpAddress}
         perpChainId={perpChainId}
         permissionsContext={permissionsContext}
         onPermissionsContextChange={(value) => {
           setPermissionsContext(value);
         }}
-      />
+      /> */}
     </div>
   );
 }

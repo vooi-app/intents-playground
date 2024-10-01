@@ -1,0 +1,41 @@
+import { useEffect, useState } from "react";
+import { useSmartAccount } from "./useSmartAccount";
+import { CONFIG } from "~/config";
+
+export function useCabBalance() {
+  const { cabClient } = useSmartAccount();
+
+  const [balance, setBalance] = useState<bigint | undefined>();
+
+  useEffect(() => {
+    async function getBalance() {
+      if (!cabClient || !cabClient.account) {
+        return;
+      }
+
+      const { address } = cabClient.account;
+      if (!address) {
+        return;
+      }
+
+      const result = await cabClient.getCabBalance({
+        address,
+        token: CONFIG.cabToken,
+      });
+
+      if (!ignore) {
+        setBalance(result);
+      }
+    }
+
+    let ignore = false;
+
+    getBalance();
+
+    return () => {
+      ignore = true;
+    };
+  }, [cabClient]);
+
+  return balance;
+}

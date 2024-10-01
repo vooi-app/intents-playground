@@ -7,16 +7,17 @@ import {
   CONFIG,
   INVOICE_MANAGER_ADDRESS,
 } from "~/config";
+import { useSmartAccount } from "~/app/useSmartAccount";
 
 export function usePaymasterRegistered() {
-  const { address } = useAccount();
+  const { cabClient } = useSmartAccount();
 
   const { data } = useReadContracts({
     contracts: CONFIG.chains.map(({ chain }) => ({
       address: INVOICE_MANAGER_ADDRESS,
       abi: invoiceManagerAbi,
       functionName: "cabPaymasters",
-      args: [address ?? "0x"],
+      args: [cabClient?.account?.address ?? "0x"],
       chainId: chain.id,
     })),
     query: {
