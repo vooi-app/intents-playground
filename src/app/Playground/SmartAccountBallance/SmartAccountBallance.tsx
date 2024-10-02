@@ -22,15 +22,17 @@ export function SmartAccountBallance(): JSX.Element {
       </div>
 
       <div className="flex gap-1">
-        <button
-          className="bg-yellow-400 disabled:opacity-60"
-          disabled={mintPending}
-          onClick={() => {
-            mint();
-          }}
-        >
-          Mint
-        </button>
+        {CONFIG.cabToken === "6TEST" && (
+          <button
+            className="bg-yellow-400 disabled:opacity-60"
+            disabled={mintPending}
+            onClick={() => {
+              mint();
+            }}
+          >
+            Mint
+          </button>
+        )}
 
         <button
           className="bg-yellow-400 disabled:opacity-60"
