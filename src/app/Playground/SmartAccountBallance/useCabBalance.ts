@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSmartAccount } from "./useSmartAccount";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 import { CONFIG } from "~/config";
 
 export function useCabBalance() {

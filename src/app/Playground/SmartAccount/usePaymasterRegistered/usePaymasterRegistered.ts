@@ -7,7 +7,7 @@ import {
   CONFIG,
   INVOICE_MANAGER_ADDRESS,
 } from "~/config";
-import { useSmartAccount } from "~/app/useSmartAccount";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 
 export function usePaymasterRegistered() {
   const { cabClient } = useSmartAccount();

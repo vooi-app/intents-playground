@@ -1,9 +1,17 @@
 import { useWriteContracts } from "wagmi/experimental";
 import { positionRouter } from "./abi/positionRouter";
-import { encodePacked, formatUnits, parseUnits, toHex } from "viem";
+import {
+  encodeFunctionData,
+  encodePacked,
+  formatUnits,
+  parseUnits,
+  toHex,
+} from "viem";
 import Decimal from "decimal.js-light";
 import { useReadContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
+import { CONFIG } from "~/config";
 
 interface Prices {
   current: Record<string, string>;
@@ -47,7 +55,7 @@ export function useCreateIncreasePosition() {
     args: [],
   });
 
-  const { writeContractsAsync, data, isPending } = useWriteContracts();
+  const { cabClient } = useSmartAccount();
 
   const createIncreasePosition = async ({
     id,
@@ -55,6 +63,10 @@ export function useCreateIncreasePosition() {
     leverage,
     isLong,
   }: CreateIncreasePositionParams) => {
+    if (!cabClient) {
+      return;
+    }
+
     if (!executionFee) {
       return;
     }
@@ -80,25 +92,35 @@ export function useCreateIncreasePosition() {
       KILOEX_DECIMALS
     );
 
-    const tx = await writeContractsAsync({
-      contracts: [
+    const { userOperation } = await cabClient.prepareUserOperationRequestCAB({
+      calls: [
         {
-          abi: positionRouter,
-          functionName: "createIncreasePositionV3",
-          address: POSITION_ROUTER_ADDRESS,
-          args: [
-            BigInt(id),
-            margin,
-            leverageInDecimals,
-            isLong,
-            acceptablePrice,
-            executionFee,
-            toHex("vooi", { size: 32 }),
-            KILOEX_EXTRA_INFO,
-          ],
+          to: POSITION_ROUTER_ADDRESS,
+          data: encodeFunctionData({
+            abi: positionRouter,
+            functionName: "createIncreasePositionV3",
+            args: [
+              BigInt(id),
+              margin,
+              leverageInDecimals,
+              isLong,
+              acceptablePrice,
+              executionFee,
+              toHex("vooi", { size: 32 }),
+              KILOEX_EXTRA_INFO,
+            ],
+          }),
+          value: BigInt(0),
         },
       ],
+      repayTokens: [CONFIG.cabToken],
     });
+
+    const userOpHash = await cabClient.sendUserOperationCAB({
+      userOperation,
+    });
+
+    console.log(userOpHash);
   };
 
   return createIncreasePosition;

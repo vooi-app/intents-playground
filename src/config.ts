@@ -11,6 +11,7 @@ export interface ChainConfig {
 
 export interface Config {
   cabToken: "USDC" | "6TEST";
+  cabTokenDecimals: number;
   chains: ChainConfig[];
 }
 
@@ -28,6 +29,7 @@ export let CONFIG: Config;
 if (process.env.NEXT_PUBLIC_NETWORK === "mainnet") {
   CONFIG = {
     cabToken: "USDC",
+    cabTokenDecimals: 18,
     chains: [
       {
         chain: base,
@@ -48,6 +50,7 @@ if (process.env.NEXT_PUBLIC_NETWORK === "mainnet") {
 } else {
   CONFIG = {
     cabToken: "6TEST",
+    cabTokenDecimals: 6,
     chains: [
       {
         usdTokenDecimals: 6,

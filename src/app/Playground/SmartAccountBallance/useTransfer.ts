@@ -1,24 +1,28 @@
 import { erc20Abi, parseUnits } from "viem";
-import { useAccount } from "wagmi";
-import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
-import { vaultManager } from "./abi/vaultManager";
-import { CONFIG, VAULT_MANAGER_ADDRESS } from "~/config";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
+import { CONFIG } from "~/config";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 
 export function useTransfer() {
+  const { cabClient } = useSmartAccount();
+
   const { chainId } = useAccount();
 
-  const { writeContracts, data: id, isPending } = useWriteContracts();
+  const { data: hash, isPending, writeContract } = useWriteContract();
 
-  const { data: callsStatus } = useCallsStatus({
-    id: id!,
-    query: {
-      enabled: !!id,
-      refetchInterval: (data) =>
-        data.state.data?.status === "CONFIRMED" ? false : 2000,
-    },
+  const { isLoading } = useWaitForTransactionReceipt({
+    hash,
   });
 
-  const transfer = () => {
+  const transfer = async () => {
+    if (!cabClient?.account?.address) {
+      return;
+    }
+
     if (chainId === undefined) {
       return;
     }
@@ -30,36 +34,16 @@ export function useTransfer() {
 
     const amount = parseUnits("1", chainConfig.usdTokenDecimals);
 
-    writeContracts({
-      contracts: [
-        {
-          address: chainConfig.usdTokenAddress,
-          abi: erc20Abi,
-          functionName: "approve",
-          args: [VAULT_MANAGER_ADDRESS, amount],
-        },
-        {
-          address: VAULT_MANAGER_ADDRESS,
-          abi: vaultManager,
-          functionName: "deposit",
-          args: [
-            chainConfig.usdTokenAddress,
-            chainConfig.vaultAddress,
-            amount,
-            false,
-          ],
-        },
-      ],
-      capabilities: {
-        paymasterService: {
-          url: chainConfig.payMasterURL,
-        },
-      },
+    writeContract({
+      address: chainConfig.usdTokenAddress,
+      abi: erc20Abi,
+      functionName: "transfer",
+      args: [cabClient.account.address, amount],
     });
   };
 
   return {
     transfer,
-    pending: isPending || callsStatus?.status === "PENDING",
+    pending: isPending || isLoading,
   };
 }

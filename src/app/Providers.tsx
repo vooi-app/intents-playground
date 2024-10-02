@@ -10,7 +10,8 @@ import { injected } from "wagmi/connectors";
 import { useState } from "react";
 import { CONFIG } from "~/config";
 import { Chain, Transport } from "viem";
-import { SmartAccountProvider } from "./SmartAccountProvider";
+import { SmartAccountProvider } from "~/components/SmartAccountProvider";
+import { isPlainObject } from "./isPlainObject";
 
 interface Props {
   children?: React.ReactNode;
@@ -24,6 +25,24 @@ export function Providers({ children }: Props): JSX.Element {
           queries: {
             structuralSharing(prevData, data) {
               return replaceEqualDeep(prevData, data);
+            },
+            queryKeyHashFn: (queryKey) => {
+              return JSON.stringify(queryKey, (_, val) => {
+                if (isPlainObject(val)) {
+                  return Object.keys(val)
+                    .sort()
+                    .reduce((result, key) => {
+                      result[key] = val[key];
+                      return result;
+                    }, {} as any);
+                }
+
+                if (typeof val === "bigint") {
+                  return val.toString();
+                }
+
+                return val;
+              });
             },
           },
         },

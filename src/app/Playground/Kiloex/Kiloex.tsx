@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useCreateIncreasePosition } from "./useCreateIncreasePosition";
 import { useAccount, useReadContract } from "wagmi";
 import { perpView } from "./abi/perpView";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { useState } from "react";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 
 interface Symbol {
   symbol: string;
@@ -25,7 +26,9 @@ interface Symbol {
 const PERP_VIEW_ADDRESS = "0x92A381C496eeE6C4686A4169aFf4aF94eAfeAFCc";
 
 export function Kiloex(): JSX.Element {
-  const { address } = useAccount();
+  const { cabClient } = useSmartAccount();
+
+  const address = cabClient?.account?.address;
 
   const [openAmount, setOpenAmount] = useState("1");
 
@@ -42,12 +45,17 @@ export function Kiloex(): JSX.Element {
 
   const symbol = symbols?.find(({ symbol }) => symbol === "ETHTUSD");
 
-  const { data } = useReadContract({
+  const { data: positions } = useReadContract({
     abi: perpView,
     address: PERP_VIEW_ADDRESS,
     functionName: "getPositions",
-    args: [address!, [BigInt(symbol!.id)]],
+    args: [address!, symbol?.id ? [BigInt(symbol.id)] : []],
+    query: {
+      enabled: !!address && !!symbol,
+    },
   });
+
+  const position = positions?.[0];
 
   const createIncreasePosition = useCreateIncreasePosition();
 
@@ -55,7 +63,7 @@ export function Kiloex(): JSX.Element {
     <div className="flex flex-col gap-1 items-start">
       Kiloex
       <br />
-      {/* Position: {position !== undefined ? formatUnits(position, 6) : "-"} */}
+      Position: {position !== undefined ? formatUnits(position.margin, 6) : "-"}
       <div className="flex gap-1">
         <button
           className="bg-green-400 disabled:opacity-60"

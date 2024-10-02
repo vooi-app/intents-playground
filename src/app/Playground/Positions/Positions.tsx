@@ -1,10 +1,11 @@
-import { useAccount, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import { mockPerp } from "./abi/mockPerp";
 import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
 import { useOpenPosition } from "./useOpenPosition";
 import { useClosePosition } from "./useClosePosition";
 import { useState } from "react";
-import { useSmartAccount } from "~/app/useSmartAccount";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
+import { CONFIG } from "~/config";
 // import { Session } from "./Session";
 
 interface Props {
@@ -50,7 +51,10 @@ export function Positions({
     <div className="flex flex-col gap-1 items-start">
       {title}
       <br />
-      Position: {position !== undefined ? formatUnits(position, 6) : "-"}
+      Position:{" "}
+      {position !== undefined
+        ? formatUnits(position, CONFIG.cabTokenDecimals)
+        : "-"}
       <div className="flex gap-1">
         <button
           className="bg-green-400 disabled:opacity-60"
@@ -60,7 +64,7 @@ export function Positions({
               return;
             }
 
-            const amount = parseUnits(openAmount, 6);
+            const amount = parseUnits(openAmount, CONFIG.cabTokenDecimals);
 
             openPosition(amount);
           }}

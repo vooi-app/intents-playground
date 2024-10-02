@@ -7,6 +7,7 @@ import { Positions } from "./Positions/Positions";
 import { SmartAccount } from "./SmartAccount/SmartAccount";
 import { optimismSepolia, sepolia } from "viem/chains";
 import { EOABalance } from "./EOABalance";
+import { Kiloex } from "./Kiloex/Kiloex";
 
 interface Props {}
 
@@ -30,7 +31,7 @@ export function Playground({}: Props): JSX.Element {
       <SmartAccount />
       <SmartAccountBallance />
 
-      <div className="flex gap-2">
+      {/* <div className="flex gap-2">
         <Positions
           title="OP"
           perpChainId={optimismSepolia.id}
@@ -41,7 +42,9 @@ export function Playground({}: Props): JSX.Element {
           perpChainId={sepolia.id}
           perpAddress="0x98eE3CA9Df88FC39d7CC700655eb2042344eA11f"
         />
-      </div>
+      </div> */}
+
+      <Kiloex />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { mockPerp } from "./abi/mockPerp";
 import { Address, encodeFunctionData } from "viem";
 import { CONFIG } from "~/config";
 import { useAccount, useSwitchChain } from "wagmi";
-import { useSmartAccount } from "~/app/useSmartAccount";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 
 export function useClosePosition(
   perpAddress: Address,

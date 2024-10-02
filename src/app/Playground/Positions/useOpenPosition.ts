@@ -2,7 +2,7 @@ import { Address, encodeFunctionData, erc20Abi } from "viem";
 import { CONFIG } from "~/config";
 import { mockPerp } from "./abi/mockPerp";
 import { useAccount, useSwitchChain } from "wagmi";
-import { useSmartAccount } from "~/app/useSmartAccount";
+import { useSmartAccount } from "~/components/SmartAccountProvider";
 
 export function useOpenPosition(
   perpAddress: Address,

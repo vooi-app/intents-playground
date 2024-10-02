@@ -2,8 +2,9 @@
 
 import { formatUnits } from "viem";
 import { useMint } from "./useMint";
-import { useTransfer } from "./useTransfer2";
-import { useCabBalance } from "~/app/useCabBalance";
+import { useTransfer } from "./useTransfer";
+import { useCabBalance } from "./useCabBalance";
+import { CONFIG } from "~/config";
 
 export function SmartAccountBallance(): JSX.Element {
   const balance = useCabBalance();
@@ -13,7 +14,12 @@ export function SmartAccountBallance(): JSX.Element {
 
   return (
     <div>
-      <div>CAB: {balance !== undefined ? formatUnits(balance, 6) : "-"}</div>
+      <div>
+        CAB:{" "}
+        {balance !== undefined
+          ? formatUnits(balance, CONFIG.cabTokenDecimals)
+          : "-"}
+      </div>
 
       <div className="flex gap-1">
         <button
