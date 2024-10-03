@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCreateIncreasePosition } from "./useCreateIncreasePosition";
-import { useAccount, useReadContract } from "wagmi";
+import { useCreateIncreasePosition } from "./useCreateIncreasePosition2";
+import { useReadContract } from "wagmi";
 import { perpView } from "./abi/perpView";
 import { formatUnits, parseUnits } from "viem";
 import { useState } from "react";
 import { useSmartAccount } from "~/components/SmartAccountProvider";
+import { CONFIG } from "~/config";
+import { useCreateDecreasePosition } from "./useCreateDecreasePosition";
 
 interface Symbol {
   symbol: string;
@@ -58,6 +60,7 @@ export function Kiloex(): JSX.Element {
   const position = positions?.[0];
 
   const createIncreasePosition = useCreateIncreasePosition();
+  const createDecreasePosition = useCreateDecreasePosition();
 
   return (
     <div className="flex flex-col gap-1 items-start">
@@ -67,7 +70,6 @@ export function Kiloex(): JSX.Element {
       <div className="flex gap-1">
         <button
           className="bg-green-400 disabled:opacity-60"
-          // disabled={openPositionPending}
           onClick={async () => {
             if (!symbol) {
               return;
@@ -77,13 +79,13 @@ export function Kiloex(): JSX.Element {
               return;
             }
 
-            const amount = parseUnits(openAmount, 6);
+            const amount = parseUnits(openAmount, CONFIG.cabTokenDecimals);
 
             createIncreasePosition({
               id: symbol.id,
-              amount: "1",
+              amount,
               isLong: true,
-              leverage: symbol.defaultLeverage,
+              leverage: 10,
             });
           }}
         >
@@ -100,9 +102,16 @@ export function Kiloex(): JSX.Element {
       </div>
       <button
         className="bg-red-400 disabled:opacity-60"
-        // disabled={closePositionPending}
         onClick={() => {
-          // closePosition();
+          if (!position) {
+            return;
+          }
+
+          createDecreasePosition({
+            id: position.productId,
+            isLong: position.isLong,
+            margin: position.margin,
+          });
         }}
       >
         Close

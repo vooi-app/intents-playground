@@ -1,12 +1,5 @@
 import { positionRouter } from "./abi/positionRouter";
-import {
-  encodeFunctionData,
-  encodePacked,
-  erc20Abi,
-  formatUnits,
-  parseUnits,
-  toHex,
-} from "viem";
+import { encodeFunctionData, encodePacked, parseUnits } from "viem";
 import Decimal from "decimal.js-light";
 import { useReadContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
@@ -18,11 +11,10 @@ interface Prices {
   previousDay: Record<string, string>;
 }
 
-interface CreateIncreasePositionParams {
-  amount: bigint;
-  id: number;
+interface CreateDecreasePositionParams {
+  id: bigint;
   isLong: boolean;
-  leverage: number;
+  margin: bigint;
 }
 
 const VOOI_BROKER_ID = 11;
@@ -31,13 +23,11 @@ const KILOEX_DECIMALS = 8;
 
 const KILOEX_EXTRA_INFO = encodePacked(["uint8"], [VOOI_BROKER_ID]);
 
-const STABLE_TOKEN_DECIMALS = 18;
-
 const SLIPPAGE_STRING = "0.5";
 
 const POSITION_ROUTER_ADDRESS = "0x298e94D5494E7c461a05903DcF41910e0125D019";
 
-export function useCreateIncreasePosition() {
+export function useCreateDecreasePosition() {
   const { data: prices } = useQuery({
     queryKey: ["prices"],
     queryFn: async (): Promise<Prices> => {
@@ -59,10 +49,9 @@ export function useCreateIncreasePosition() {
 
   const createIncreasePosition = async ({
     id,
-    amount,
-    leverage,
+    margin,
     isLong,
-  }: CreateIncreasePositionParams) => {
+  }: CreateDecreasePositionParams) => {
     if (!cabClient) {
       return;
     }
@@ -71,22 +60,12 @@ export function useCreateIncreasePosition() {
       return;
     }
 
-    const markPrice = prices?.current[id];
+    const markPrice = prices?.current[Number(id)];
     if (!markPrice) {
       return;
     }
 
-    const margin = parseUnits(
-      formatUnits(amount / BigInt(leverage), STABLE_TOKEN_DECIMALS),
-      KILOEX_DECIMALS
-    );
-
-    const leverageInDecimals = parseUnits(leverage.toString(), KILOEX_DECIMALS);
-
     let slippageValue = new Decimal(markPrice).times(SLIPPAGE_STRING).div(100);
-    if (!isLong) {
-      slippageValue = slippageValue.times(-1);
-    }
 
     const acceptablePrice = parseUnits(
       new Decimal(markPrice).plus(slippageValue).toString(),
@@ -96,34 +75,20 @@ export function useCreateIncreasePosition() {
     const { userOperation } = await cabClient.prepareUserOperationRequestCAB({
       calls: [
         {
-          to: "0x55d398326f99059fF775485246999027B3197955",
-          data: encodeFunctionData({
-            abi: erc20Abi,
-            functionName: "approve",
-            args: [
-              POSITION_ROUTER_ADDRESS,
-              (margin + margin / 100n) * 10n ** 10n,
-            ],
-          }),
-          value: BigInt(0),
-        },
-        {
           to: POSITION_ROUTER_ADDRESS,
           data: encodeFunctionData({
             abi: positionRouter,
-            functionName: "createIncreasePositionV3",
+            functionName: "createDecreasePositionV3",
             args: [
-              BigInt(id),
+              id,
               margin,
-              leverageInDecimals,
               isLong,
               acceptablePrice,
               executionFee,
-              toHex("vooi", { size: 32 }),
               KILOEX_EXTRA_INFO,
             ],
           }),
-          value: executionFee,
+          value: BigInt(0),
         },
       ],
       repayTokens: [CONFIG.cabToken],

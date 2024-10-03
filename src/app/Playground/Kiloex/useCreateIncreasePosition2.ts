@@ -1,17 +1,8 @@
 import { positionRouter } from "./abi/positionRouter";
-import {
-  encodeFunctionData,
-  encodePacked,
-  erc20Abi,
-  formatUnits,
-  parseUnits,
-  toHex,
-} from "viem";
+import { encodePacked, erc20Abi, formatUnits, parseUnits, toHex } from "viem";
 import Decimal from "decimal.js-light";
-import { useReadContract } from "wagmi";
+import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
-import { useSmartAccount } from "~/components/SmartAccountProvider";
-import { CONFIG } from "~/config";
 
 interface Prices {
   current: Record<string, string>;
@@ -55,7 +46,8 @@ export function useCreateIncreasePosition() {
     args: [],
   });
 
-  const { cabClient } = useSmartAccount();
+  const client = usePublicClient();
+  const { writeContractAsync } = useWriteContract();
 
   const createIncreasePosition = async ({
     id,
@@ -63,7 +55,7 @@ export function useCreateIncreasePosition() {
     leverage,
     isLong,
   }: CreateIncreasePositionParams) => {
-    if (!cabClient) {
+    if (!client) {
       return;
     }
 
@@ -93,47 +85,31 @@ export function useCreateIncreasePosition() {
       KILOEX_DECIMALS
     );
 
-    const { userOperation } = await cabClient.prepareUserOperationRequestCAB({
-      calls: [
-        {
-          to: "0x55d398326f99059fF775485246999027B3197955",
-          data: encodeFunctionData({
-            abi: erc20Abi,
-            functionName: "approve",
-            args: [
-              POSITION_ROUTER_ADDRESS,
-              (margin + margin / 100n) * 10n ** 10n,
-            ],
-          }),
-          value: BigInt(0),
-        },
-        {
-          to: POSITION_ROUTER_ADDRESS,
-          data: encodeFunctionData({
-            abi: positionRouter,
-            functionName: "createIncreasePositionV3",
-            args: [
-              BigInt(id),
-              margin,
-              leverageInDecimals,
-              isLong,
-              acceptablePrice,
-              executionFee,
-              toHex("vooi", { size: 32 }),
-              KILOEX_EXTRA_INFO,
-            ],
-          }),
-          value: executionFee,
-        },
+    const hash = await writeContractAsync({
+      address: "0x55d398326f99059fF775485246999027B3197955",
+      abi: erc20Abi,
+      functionName: "approve",
+      args: [POSITION_ROUTER_ADDRESS, (margin + margin / 100n) * 10n ** 10n],
+    });
+
+    await client!.waitForTransactionReceipt({ hash });
+
+    await writeContractAsync({
+      address: POSITION_ROUTER_ADDRESS,
+      abi: positionRouter,
+      functionName: "createIncreasePositionV3",
+      args: [
+        BigInt(id),
+        margin,
+        leverageInDecimals,
+        isLong,
+        acceptablePrice,
+        executionFee,
+        toHex("vooi", { size: 32 }),
+        KILOEX_EXTRA_INFO,
       ],
-      repayTokens: [CONFIG.cabToken],
+      value: executionFee,
     });
-
-    const userOpHash = await cabClient.sendUserOperationCAB({
-      userOperation,
-    });
-
-    console.log(userOpHash);
   };
 
   return createIncreasePosition;
