@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCreateIncreasePosition } from "./useCreateIncreasePosition2";
+import { useCreateIncreasePosition } from "./useCreateIncreasePosition";
 import { useReadContract } from "wagmi";
 import { perpView } from "./abi/perpView";
 import { formatUnits, parseUnits } from "viem";
