@@ -8,10 +8,12 @@ import {
   toHex,
 } from "viem";
 import Decimal from "decimal.js-light";
-import { useReadContract } from "wagmi";
+import { usePublicClient, useReadContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
 import { useSmartAccount } from "~/components/SmartAccountProvider";
 import { CONFIG } from "~/config";
+import { ethTransferVerifier } from "./abi/ethTransferVerifier";
+import { signMessage } from "viem/accounts";
 
 interface Prices {
   current: Record<string, string>;
@@ -57,6 +59,8 @@ export function useCreateIncreasePosition() {
 
   const { cabClient } = useSmartAccount();
 
+  const client = usePublicClient();
+
   const createIncreasePosition = async ({
     id,
     amount,
@@ -93,6 +97,19 @@ export function useCreateIncreasePosition() {
       KILOEX_DECIMALS
     );
 
+    const messageHash = await client!.readContract({
+      address: "0x28D6d7BDD154b70bdf631880166edd9F1b64Cee5",
+      abi: ethTransferVerifier,
+      functionName: "getMessageHash",
+      args: [cabClient.account!.address!, executionFee],
+    });
+
+    const signature = await signMessage({
+      message: { raw: messageHash },
+      privateKey:
+        "0xe339057a3025ad306c40d49e6f41715f7477b875f0f4081d21e4a7a1597f6deb",
+    });
+
     const { userOperation } = await cabClient.prepareUserOperationRequestCAB({
       calls: [
         {
@@ -104,6 +121,15 @@ export function useCreateIncreasePosition() {
               POSITION_ROUTER_ADDRESS,
               (margin + margin / 100n) * 10n ** 10n,
             ],
+          }),
+          value: BigInt(0),
+        },
+        {
+          to: "0x28D6d7BDD154b70bdf631880166edd9F1b64Cee5",
+          data: encodeFunctionData({
+            abi: ethTransferVerifier,
+            functionName: "transferEther",
+            args: [executionFee, signature],
           }),
           value: BigInt(0),
         },

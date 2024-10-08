@@ -1,8 +1,15 @@
 import { positionRouter } from "./abi/positionRouter";
 import { encodePacked, erc20Abi, formatUnits, parseUnits, toHex } from "viem";
 import Decimal from "decimal.js-light";
-import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import { useQuery } from "@tanstack/react-query";
+import { ethTransferVerifier } from "./abi/ethTransferVerifier";
+import { signMessage } from "viem/accounts";
 
 interface Prices {
   current: Record<string, string>;
@@ -46,6 +53,7 @@ export function useCreateIncreasePosition() {
     args: [],
   });
 
+  const { address } = useAccount();
   const client = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
@@ -84,6 +92,30 @@ export function useCreateIncreasePosition() {
       new Decimal(markPrice).plus(slippageValue).toString(),
       KILOEX_DECIMALS
     );
+
+    //
+
+    const messageHash = await client!.readContract({
+      address: "0x28D6d7BDD154b70bdf631880166edd9F1b64Cee5",
+      abi: ethTransferVerifier,
+      functionName: "getMessageHash",
+      args: [address!, executionFee],
+    });
+
+    const signature = await signMessage({
+      message: { raw: messageHash },
+      privateKey:
+        "0xe339057a3025ad306c40d49e6f41715f7477b875f0f4081d21e4a7a1597f6deb",
+    });
+
+    await writeContractAsync({
+      address: "0x28D6d7BDD154b70bdf631880166edd9F1b64Cee5",
+      abi: ethTransferVerifier,
+      functionName: "transferEther",
+      args: [executionFee, signature],
+    });
+
+    //
 
     const hash = await writeContractAsync({
       address: "0x55d398326f99059fF775485246999027B3197955",
