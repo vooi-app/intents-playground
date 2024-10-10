@@ -7,6 +7,8 @@ import {
 import { CONFIG } from "~/config";
 import { useSmartAccount } from "~/components/SmartAccountProvider";
 
+export const TRANSFER_AMOUNT = 5;
+
 export function useTransfer() {
   const { cabClient } = useSmartAccount();
 
@@ -32,7 +34,10 @@ export function useTransfer() {
       return;
     }
 
-    const amount = parseUnits("1", chainConfig.usdTokenDecimals);
+    const amount = parseUnits(
+      TRANSFER_AMOUNT.toString(),
+      chainConfig.usdTokenDecimals,
+    );
 
     writeContract({
       address: chainConfig.usdTokenAddress,

@@ -1,4 +1,4 @@
-export const uniswapQuoter = [
+export const uniswapQuoterAbi = [
   {
     inputs: [
       {

@@ -2,7 +2,7 @@
 
 import { formatUnits } from "viem";
 import { useMint } from "./useMint";
-import { useTransfer } from "./useTransfer";
+import { useTransfer, TRANSFER_AMOUNT } from "./useTransfer";
 import { useCabBalance } from "./useCabBalance";
 import { CONFIG } from "~/config";
 
@@ -41,7 +41,7 @@ export function SmartAccountBallance(): JSX.Element {
             transfer();
           }}
         >
-          Transfer
+          Transfer {TRANSFER_AMOUNT} USDC
         </button>
       </div>
     </div>

@@ -10,8 +10,8 @@ import {
 } from "wagmi/actions";
 import { ethTransferVerifier } from "./abi/ethTransferVerifier";
 import { positionRouter } from "./abi/positionRouter";
-import { uniswapSwapRouter } from "./abi/uniswapISwapRouter";
-import { uniswapQuoter } from "./abi/uniswapQuoter";
+import { uniswapSwapRouterAbi } from "./abi/uniswapISwapRouter";
+import { uniswapQuoterAbi } from "./abi/uniswapQuoter";
 
 interface Prices {
   current: Record<string, string>;
@@ -101,7 +101,7 @@ export function useCreateIncreasePosition() {
 
     const quote = await readContract(config, {
       address: UNISWAP_QUOTER_ADDRESS,
-      abi: uniswapQuoter,
+      abi: uniswapQuoterAbi,
       functionName: "quoteExactOutputSingle",
       args: [
         [
@@ -134,7 +134,7 @@ export function useCreateIncreasePosition() {
     const swapHash = await writeContract(config, {
       chainId: KILOEX_CHAIN_ID,
       address: UNISWAP_SWAP_ROUTER_ADDRESSES,
-      abi: uniswapSwapRouter,
+      abi: uniswapSwapRouterAbi,
       functionName: "exactOutputSingle",
       args: [
         {
@@ -142,7 +142,6 @@ export function useCreateIncreasePosition() {
           tokenOut: USDT_ADDRESS,
           fee: 100, // 0.3% fee
           recipient: address,
-          deadline: BigInt(Math.floor(Date.now() / 1000) + 60 * 20), // 20 minutes
           amountOut: usdtAmountOut,
           amountInMaximum: usdcAmountIn,
           sqrtPriceLimitX96: 0n,

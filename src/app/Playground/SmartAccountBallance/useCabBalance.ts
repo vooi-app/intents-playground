@@ -32,7 +32,12 @@ export function useCabBalance() {
 
     getBalance();
 
+    const interval = window.setInterval(() => {
+      getBalance();
+    }, 4000);
+
     return () => {
+      window.clearInterval(interval);
       ignore = true;
     };
   }, [cabClient]);
